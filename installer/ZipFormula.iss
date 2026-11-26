@@ -38,7 +38,7 @@ Source: "..\build\plugin\PostItNoteRacing.Plugin.dll"; DestDir: "{code:GetSimHub
 Source: "..\build\plugin\Post-It-Note-Racing_extensions.js"; DestDir: "{code:GetSimHubPath}\JavascriptExtensions"; Flags: ignoreversion
 Source: "..\build\plugin\LICENSE-PostItNoteRacing.txt"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; DestName: "LICENSE-PostItNoteRacing.txt"; Flags: ignoreversion uninsneveruninstall
 Source: "..\LICENSE"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; DestName: "LICENSE-ZipFormula.txt"; Flags: ignoreversion uninsneveruninstall
-Source: "..\dashboard\*.simhubdash"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion uninsneveruninstall
+Source: "..\build\dashboard\ZipFormula-RacingDash.simhubdash"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion uninsneveruninstall
 Source: "..\dashboard\Preview.png"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion skipifsourcedoesntexist uninsneveruninstall
 Source: "..\docs\README_JP.txt"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion uninsneveruninstall
 
