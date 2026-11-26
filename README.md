@@ -1,25 +1,30 @@
-# Zip Formula iRacing Dash Phone
+# Zip Formula RacingDash for SimHub
 
-SimHub向けZip Formula iRacingダッシュボードです。
+Zip Formula RacingDashは、iRacingでのレース状況をスマートフォンなどに表示するSimHub用ダッシュボードです。
 
-## インストール
+## ダウンロード
 
-1. GitHub Releasesから `ZipFormula-SimHub-Setup.exe` をダウンロードします。
-2. SimHubを終了し、EXEを実行します。
-3. インストール完了後にSimHubを起動します。
-4. Dash Studioの **Import Dashboard** から、ドキュメントの `Zip Formula/SimHub Dashboard` にある `.simhubdash` ファイルをインポートします。
+[**最新版をダウンロード（ZipFormula-SimHub-Setup.exe）**](https://github.com/ryu-mizushima/zipformula-iracingdash-phone/releases/latest/download/ZipFormula-SimHub-Setup.exe)
 
-インストーラーはSimHubのインストール先を検出し、PostItNoteRacingのDLLとJavaScript拡張を配置します。既存の同名プラグインファイルがあれば、初回インストール時のファイルをバックアップし、アンインストール時に復元します。
+## インストール方法
 
-## 開発者向けビルド
+1. 上のリンクからインストーラーをダウンロードします。
+2. SimHubを終了します。
+3. `ZipFormula-SimHub-Setup.exe` を実行します。
+4. インストール完了後、SimHubを起動します。
+5. Dash Studioを開き、**Import Dashboard** を選択します。
+6. ドキュメント内の `Zip Formula\SimHub Dashboard` フォルダーにある `.simhubdash` ファイルを選択してインポートします。
 
-- ダッシュボードファイル（`.simhubdash`）を `dashboard/` に1つ配置します。
-- `v*.*.*` 形式のタグをpushすると、GitHub ActionsがEXEをビルドしGitHub Releaseに添付します。
-- Actionsの **Build Zip Formula SimHub Installer** を手動実行すると、ビルド成果物をActions artifactとして取得できます。
+**重要：** インストーラーはダッシュボードファイルを配置しますが、SimHubへの登録は自動では行いません。必ずDash Studioからインポートしてください。
 
-## 同梱プラグイン
+## アンインストール
 
-- PostItNoteRacing v1.0.7.8
-- https://github.com/derrickmoeller/PostItNoteRacing
+Windowsの「インストールされているアプリ」からZip Formula SimHub Dashboardをアンインストールできます。
 
-PostItNoteRacingのMITライセンスはインストーラーに同梱します。Zip Formulaのライセンスはリポジトリ直下の `LICENSE` を参照してください。
+インストーラーが配置したダッシュボードやライセンスファイルは、ドキュメント内に残ります。不要な場合は手動で削除してください。
+
+インストール前から同名のPostItNoteRacingプラグインファイルが存在した場合、アンインストール時にバックアップから復元します。
+
+## ライセンス
+
+Zip Formulaのライセンスはリポジトリ内のLICENSEファイルを参照してください。同梱のPostItNoteRacingはMIT Licenseで提供されています。
