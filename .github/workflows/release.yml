@@ -16,20 +16,36 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate dashboard package
+      - name: Validate and prepare dashboard
         shell: pwsh
         run: |
-          $dashboards = @(Get-ChildItem "dashboard" -Filter "*.simhubdash" -File -ErrorAction SilentlyContinue)
+          $dashboards = @(Get-ChildItem "dashboard" -Filter "ZipFormula-RacingDash_*.simhubdash" -File)
           if ($dashboards.Count -ne 1) {
-            throw "Expected exactly one .simhubdash file in dashboard/. Found: $($dashboards.Count)"
+            throw "Expected exactly one versioned ZipFormula-RacingDash_<version>.simhubdash in dashboard/. Found: $($dashboards.Count)"
           }
+
+          if ($dashboards[0].BaseName -notmatch '^ZipFormula-RacingDash_(\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?)$') {
+            throw "Dashboard filename must be ZipFormula-RacingDash_<major>.<minor>.<patch>.simhubdash"
+          }
+          $dashboardVersion = $Matches[1]
+
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $tagVersion = "${{ github.ref_name }}".TrimStart("v")
+            if ($tagVersion -ne $dashboardVersion) {
+              throw "Git tag version ($tagVersion) does not match dashboard filename version ($dashboardVersion)."
+            }
+          }
+
+          New-Item -ItemType Directory -Force -Path "build/dashboard", "build/plugin", "build/output" | Out-Null
+          Copy-Item $dashboards[0].FullName "build/dashboard/ZipFormula-RacingDash.simhubdash" -Force
+          "APP_VERSION=$dashboardVersion" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          Write-Host "Prepared dashboard version $dashboardVersion"
 
       - name: Download pinned PostItNoteRacing plugin
         shell: pwsh
         run: |
           $version = "v1.0.7.8"
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/derrickmoeller/PostItNoteRacing/releases/tags/$version" -Headers @{ "User-Agent" = "ZipFormula-SimHub-Installer" }
-          New-Item -ItemType Directory -Force -Path "build/plugin", "build/output" | Out-Null
 
           $assets = @("PostItNoteRacing.Plugin.dll", "Post-It-Note-Racing_extensions.js")
           foreach ($assetName in $assets) {
@@ -51,16 +67,14 @@ jobs:
       - name: Build installer
         shell: pwsh
         run: |
-          $version = "${{ github.ref_name }}"
-          if ($version -eq "main" -or [string]::IsNullOrWhiteSpace($version)) { $version = "0.1.0-dev" }
-          $version = $version.TrimStart("v")
-          & "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe" "/DAppVersion=$version" "installer/ZipFormula.iss"
+          & "$env:ProgramFiles(x86)\Inno Setup 6\ISCC.exe" "/DAppVersion=$env:APP_VERSION" "installer/ZipFormula.iss"
           if ($LASTEXITCODE -ne 0) { throw "Inno Setup compilation failed." }
 
       - name: Publish GitHub Release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
+          name: Zip Formula SimHub Dashboard v${{ env.APP_VERSION }}
           files: build/output/ZipFormula-SimHub-Setup.exe
           generate_release_notes: true
 
@@ -68,6 +82,6 @@ jobs:
         if: startsWith(github.ref, 'refs/heads/')
         uses: actions/upload-artifact@v4
         with:
-          name: ZipFormula-SimHub-Setup
+          name: ZipFormula-SimHub-Setup-v${{ env.APP_VERSION }}
           path: build/output/ZipFormula-SimHub-Setup.exe
           if-no-files-found: error
