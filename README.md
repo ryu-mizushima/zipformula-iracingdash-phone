@@ -4,6 +4,8 @@ Zip Formula RacingDashは、iRacingでのレース状況をスマートフォン
 
 ## ダッシュボードの表示
 
+![Zip Formula RacingDashの画面イメージ](dashboad-image1.png)
+
 スマートフォンでの使用を想定した縦型レイアウトです。前後の車両情報を4つのカードで表示します。
 
 各カードには次の情報を表示します。
