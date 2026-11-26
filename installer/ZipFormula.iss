@@ -100,6 +100,13 @@ begin
   TryRegistryPath(HKCU, 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SimHub_is1', 'InstallLocation');
 
   if SimHubPath = '' then
+    TryFindSimHubInUninstallRegistry(HKLM, 'Software\Microsoft\Windows\CurrentVersion\Uninstall');
+  if SimHubPath = '' then
+    TryFindSimHubInUninstallRegistry(HKLM, 'Software\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall');
+  if SimHubPath = '' then
+    TryFindSimHubInUninstallRegistry(HKCU, 'Software\Microsoft\Windows\CurrentVersion\Uninstall');
+
+  if SimHubPath = '' then
   begin
     Candidate := ExpandConstant('{autopf32}\SimHub');
     if IsValidSimHub(Candidate) then SimHubPath := Candidate;
