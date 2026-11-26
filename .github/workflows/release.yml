@@ -20,14 +20,8 @@ jobs:
         shell: pwsh
         run: |
           $dashboards = @(Get-ChildItem "dashboard" -Filter "*.simhubdash" -File -ErrorAction SilentlyContinue)
-          if ($dashboards.Count -eq 0) {
-            throw "No .simhubdash file found in dashboard/. Add the dashboard before creating a release."
-          }
-          if ($dashboards.Count -gt 1) {
-            throw "Multiple .simhubdash files found. Keep exactly one dashboard for this installer."
-          }
-          if (-not (Test-Path "installer/ZipFormula.iss")) {
-            throw "installer/ZipFormula.iss is missing."
+          if ($dashboards.Count -ne 1) {
+            throw "Expected exactly one .simhubdash file in dashboard/. Found: $($dashboards.Count)"
           }
 
       - name: Download pinned PostItNoteRacing plugin
@@ -36,12 +30,18 @@ jobs:
           $version = "v1.0.7.8"
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/derrickmoeller/PostItNoteRacing/releases/tags/$version" -Headers @{ "User-Agent" = "ZipFormula-SimHub-Installer" }
           New-Item -ItemType Directory -Force -Path "build/plugin", "build/output" | Out-Null
+
           $assets = @("PostItNoteRacing.Plugin.dll", "Post-It-Note-Racing_extensions.js")
           foreach ($assetName in $assets) {
             $asset = @($release.assets | Where-Object { $_.name -eq $assetName }) | Select-Object -First 1
-            if (-not $asset) { throw "Asset not found: $assetName" }
+            if (-not $asset) { throw "Asset not found in PostItNoteRacing $version : $assetName" }
             Invoke-WebRequest -Uri $asset.browser_download_url -OutFile ("build/plugin/" + $assetName)
             if ((Get-Item ("build/plugin/" + $assetName)).Length -le 0) { throw "Downloaded asset is empty: $assetName" }
+          }
+
+          Invoke-WebRequest -Uri "https://raw.githubusercontent.com/derrickmoeller/PostItNoteRacing/$version/LICENSE" -OutFile "build/plugin/LICENSE-PostItNoteRacing.txt"
+          if ((Get-Item "build/plugin/LICENSE-PostItNoteRacing.txt").Length -le 0) {
+            throw "PostItNoteRacing license download failed."
           }
 
       - name: Install Inno Setup
