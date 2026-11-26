@@ -2,6 +2,19 @@
 
 Zip Formula RacingDashは、iRacingでのレース状況をスマートフォンなどに表示するSimHub用ダッシュボードです。
 
+## ダッシュボードの表示
+
+スマートフォンでの使用を想定した縦型レイアウトです。前後の車両情報を4つのカードで表示します。
+
+各カードには次の情報を表示します。
+
+- **Gap**：対象車両とのギャップ
+- **Last**：対象車両の最終ラップタイム
+- **#**：クラス内順位
+- **P0**：クラス順位表示
+
+レース中に前後の車両との間隔やラップタイムを、縦持ちのスマートフォン画面で確認できます。
+
 ## ダウンロード
 
 [**最新版をダウンロード（ZipFormula-SimHub-Setup.exe）**](https://github.com/ryu-mizushima/zipformula-iracingdash-phone/releases/latest/download/ZipFormula-SimHub-Setup.exe)
