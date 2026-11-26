@@ -38,7 +38,9 @@ Source: "..\build\plugin\PostItNoteRacing.Plugin.dll"; DestDir: "{code:GetSimHub
 Source: "..\build\plugin\Post-It-Note-Racing_extensions.js"; DestDir: "{code:GetSimHubPath}\JavascriptExtensions"; Flags: ignoreversion
 Source: "..\build\plugin\LICENSE-PostItNoteRacing.txt"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; DestName: "LICENSE-PostItNoteRacing.txt"; Flags: ignoreversion uninsneveruninstall
 Source: "..\LICENSE"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; DestName: "LICENSE-ZipFormula.txt"; Flags: ignoreversion uninsneveruninstall
-Source: "..\dashboard\*"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion recursesubdirs createallsubdirs uninsneveruninstall
+Source: "..\dashboard\*.simhubdash"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion uninsneveruninstall
+Source: "..\dashboard\Preview.png"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion skipifsourcedoesntexist uninsneveruninstall
+Source: "..\docs\README_JP.txt"; DestDir: "{userdocs}\Zip Formula\SimHub Dashboard"; Flags: ignoreversion uninsneveruninstall
 
 [Icons]
 Name: "{autoprograms}\Zip Formula Dashboard"; Filename: "{sys}\explorer.exe"; Parameters: """{userdocs}\Zip Formula\SimHub Dashboard"""
@@ -59,6 +61,31 @@ begin
   if (SimHubPath = '') and RegQueryStringValue(RootKey, SubKey, ValueName, Candidate) then
     if IsValidSimHub(Candidate) then
       SimHubPath := RemoveBackslash(Candidate);
+end;
+
+
+function TryFindSimHubInUninstallRegistry(const RootKey: Integer; const BaseKey: string): Boolean;
+var
+  Names: TArrayOfString;
+  I: Integer;
+  EntryKey, DisplayName, Candidate: string;
+begin
+  Result := False;
+  if not RegGetSubkeyNames(RootKey, BaseKey, Names) then exit;
+
+  for I := 0 to GetArrayLength(Names) - 1 do
+  begin
+    EntryKey := BaseKey + '\\' + Names[I];
+    if RegQueryStringValue(RootKey, EntryKey, 'DisplayName', DisplayName) and
+       (Pos('SimHub', DisplayName) > 0) and
+       RegQueryStringValue(RootKey, EntryKey, 'InstallLocation', Candidate) and
+       IsValidSimHub(Candidate) then
+    begin
+      SimHubPath := RemoveBackslash(Candidate);
+      Result := True;
+      exit;
+    end;
+  end;
 end;
 
 function FindSimHub(): string;
