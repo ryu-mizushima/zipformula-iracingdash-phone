@@ -30,6 +30,9 @@ SetupLogging=yes
 Name: "{code:GetSimHubPath}\JavascriptExtensions"
 Name: "{userdocs}\Zip Formula\SimHub Dashboard"
 
+[Registry]
+Root: HKLM; Subkey: "Software\ZipFormula\SimHubDashboard"; ValueType: string; ValueName: "SimHubPath"; ValueData: "{code:GetSimHubPath}"; Flags: uninsdeletekey
+
 [Files]
 Source: "..\build\plugin\PostItNoteRacing.Plugin.dll"; DestDir: "{code:GetSimHubPath}"; Flags: ignoreversion
 Source: "..\build\plugin\Post-It-Note-Racing_extensions.js"; DestDir: "{code:GetSimHubPath}\JavascriptExtensions"; Flags: ignoreversion
@@ -145,18 +148,27 @@ var
 begin
   if CurUninstallStep = usPostUninstall then
   begin
-    RestoreBackup(
-      'PostItNoteRacing.Plugin.dll',
-      AddBackslash(SimHubPath) + 'PostItNoteRacing.Plugin.dll'
-    );
-    RestoreBackup(
-      'Post-It-Note-Racing_extensions.js',
-      AddBackslash(SimHubPath) + 'JavascriptExtensions\Post-It-Note-Racing_extensions.js'
-    );
+    if IsValidSimHub(SimHubPath) then
+    begin
+      RestoreBackup(
+        'PostItNoteRacing.Plugin.dll',
+        AddBackslash(SimHubPath) + 'PostItNoteRacing.Plugin.dll'
+      );
+      RestoreBackup(
+        'Post-It-Note-Racing_extensions.js',
+        AddBackslash(SimHubPath) + 'JavascriptExtensions\Post-It-Note-Racing_extensions.js'
+      );
 
-    BackupRoot := ExpandConstant('{commonappdata}\ZipFormula\PluginBackup');
-    RemoveDir(BackupRoot);
-    RemoveDir(ExpandConstant('{commonappdata}\ZipFormula'));
+      BackupRoot := ExpandConstant('{commonappdata}\ZipFormula\PluginBackup');
+      RemoveDir(BackupRoot);
+      RemoveDir(ExpandConstant('{commonappdata}\ZipFormula'));
+    end
+    else
+      MsgBox(
+        'SimHubの保存先を確認できないため、元のプラグインのバックアップを復元できませんでした。' +
+        #13#10 + 'バックアップは C:\ProgramData\ZipFormula\PluginBackup に残しています。',
+        mbError, MB_OK
+      );
   end;
 end;
 
@@ -170,6 +182,15 @@ begin
     exit;
   end;
 
+  Result := True;
+end;
+
+function InitializeUninstall(): Boolean;
+begin
+  if not RegQueryStringValue(
+    HKLM, 'Software\ZipFormula\SimHubDashboard', 'SimHubPath', SimHubPath
+  ) then
+    FindSimHub();
   Result := True;
 end;
 
