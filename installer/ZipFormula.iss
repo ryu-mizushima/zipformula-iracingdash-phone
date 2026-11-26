@@ -171,7 +171,7 @@ begin
   if FileExists(BackupPath) then
   begin
     ForceDirectories(ExtractFileDir(Destination));
-    FileCopy(BackupPath, Destination, True);
+    FileCopy(BackupPath, Destination, False);
     DeleteFile(BackupPath);
   end;
 end;
@@ -200,7 +200,7 @@ begin
     else
       MsgBox(
         'SimHubの保存先を確認できないため、元のプラグインのバックアップを復元できませんでした。' +
-        #13#10 + 'バックアップは C:\ProgramData\ZipFormula\PluginBackup に残しています。',
+        Chr(13) + Chr(10) + 'バックアップは C:\ProgramData\ZipFormula\PluginBackup に残しています.',
         mbError, MB_OK
       );
   end;
