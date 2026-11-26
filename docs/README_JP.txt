@@ -1,21 +1,19 @@
-ZIP FORMULA SIMHUB DASHBOARD - INSTALLATION
-=============================================
+ZIP FORMULA SIMHUB DASHBOARD - インストールガイド
+==================================================
 
-1. Exit SimHub before installing.
-2. Run ZipFormula-SimHub-Setup.exe.
-3. The installer detects the SimHub installation folder and installs:
+1. インストール前にSimHubを終了してください。
+2. ZipFormula-SimHub-Setup.exeを実行してください。
+3. インストーラーがSimHubのインストール先を自動検出し、次のファイルを配置します。
    - PostItNoteRacing.Plugin.dll
    - Post-It-Note-Racing_extensions.js
-4. Start SimHub.
-5. Open Dash Studio and select "Import Dashboard".
-6. Select the .simhubdash file in this folder:
-   Documents\Zip Formula\SimHub Dashboard
+4. インストール完了後、SimHubを起動します。
+5. Dash Studioを開き、「Import Dashboard」を選択します。
+6. ドキュメント内の「Zip Formula\SimHub Dashboard」フォルダーにある .simhubdash ファイルを選択します。
 
-IMPORTANT
----------
-The dashboard file must be imported through Dash Studio. Copying the
-.simhubdash file to the Documents folder does not register it in SimHub.
+【重要】
+.simhubdashファイルをドキュメントフォルダーにコピーしただけでは、SimHubにダッシュボードは登録されません。
+必ずDash Studioの「Import Dashboard」からインポートしてください。
 
-The installer keeps a backup of any existing PostItNoteRacing DLL/JS
-files and restores those originals when Zip Formula is uninstalled.
-The dashboard and license files are left in Documents after uninstall.
+既存のPostItNoteRacing DLL/JSファイルがある場合、インストーラーは上書き前にバックアップします。
+Zip Formulaをアンインストールすると、インストール前のファイルを復元します。
+ダッシュボードおよびライセンスファイルは、アンインストール後もドキュメントに残ります。
