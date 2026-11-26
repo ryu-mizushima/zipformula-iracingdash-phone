@@ -75,7 +75,7 @@ begin
 
   for I := 0 to GetArrayLength(Names) - 1 do
   begin
-    EntryKey := BaseKey + '\\' + Names[I];
+    EntryKey := BaseKey + '\' + Names[I];
     if RegQueryStringValue(RootKey, EntryKey, 'DisplayName', DisplayName) and
        (Pos('SimHub', DisplayName) > 0) and
        RegQueryStringValue(RootKey, EntryKey, 'InstallLocation', Candidate) and
